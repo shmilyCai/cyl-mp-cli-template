@@ -1,0 +1,88 @@
+// 在WXML中使用的过滤器方法，此文件不支持ES6写法
+
+// 将分转换为元
+var regFenToYuan = function(fen) {
+  if (fen === 0 || fen === 0.0 || fen === undefined) {
+    return '0.00';
+  }
+  var num = fen;
+  num = fen * 0.01;
+  num += '';
+  num = _toDecimal2(num);
+  return num;
+};
+
+var searchKeyInString = function(str, key) {
+  if (str === null || str === '' || str === undefined) {
+    return;
+  }
+  if (key === null || key === '' || key === undefined) {
+    return str;
+  }
+
+  var index = str.indexOf(key);
+  console.log(str + '：' + index);
+  var temp = [];
+  for (var i = 0; i < str.length; i++) {
+    if (i === index) {
+      temp.push("<view style='color:#f00;'>");
+      temp.push(str[i]);
+    } else {
+      temp.push(str[i]);
+      if (i === index + key.length) {
+        // 不在末尾时，str长度大于index和key之和
+        temp.push('--');
+      }
+      if (i === str.length - 1 && str.length <= index + key.length) {
+        //末尾时
+        temp.push('</view>');
+      }
+    }
+  }
+  return str;
+};
+
+// 强制保留2位小数
+var _toDecimal2 = function(x) {
+  var f = parseFloat(x);
+  if (isNaN(f)) {
+    return false;
+  }
+  var f = Math.round(x * 100) / 100;
+  var s = f.toString();
+  var rs = s.indexOf('.');
+  if (rs < 0) {
+    rs = s.length;
+    s += '.';
+  }
+  while (s.length <= rs + 2) {
+    s += '0';
+  }
+  return s;
+};
+
+// 将时间搓转换为小时和分钟
+var toHourMinute = function(time) {
+  var minute = 1000 * 60;
+  var hour = minute * 60;
+
+  if (time <= 0 || time === undefined || time === null) return;
+
+  var hourValue = parseInt(time / hour);
+  var minuteValue = parseInt((time - hourValue * hour) / minute);
+  var result = hourValue + '小时' + minuteValue + '分钟';
+
+  return result;
+};
+
+// 将g转换成kg
+var regGToKg = function(g) {
+  return parseFloat(g / 1000);
+};
+
+module.exports = {
+  regFenToYuan: regFenToYuan,
+  searchKeyInString: searchKeyInString,
+  toHourMinute: toHourMinute,
+  regGToKg: regGToKg
+};
